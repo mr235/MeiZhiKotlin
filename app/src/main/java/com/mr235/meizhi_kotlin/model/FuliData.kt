@@ -1,11 +1,12 @@
 package com.mr235.meizhi_kotlin.model
 
+import java.io.Serializable
 import java.util.*
 
 /**
  * Created by Administrator on 2017/11/18.
  */
-class FuliData {
+class FuliData : Serializable {
 //    {
 //        _id: "5a0e4a0d421aa90fe7253643",
 //        createdAt: "2017-11-17T10:31:41.155Z",

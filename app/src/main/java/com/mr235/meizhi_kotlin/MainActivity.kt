@@ -1,6 +1,9 @@
 package com.mr235.meizhi_kotlin
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
@@ -90,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+    inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
         val data = ArrayList<FuliData>()
         private var screenWidth = 0
@@ -102,16 +105,27 @@ class MainActivity : AppCompatActivity() {
             return data.size
         }
 
+        public val onClickListener = View.OnClickListener { v ->
+            val context = v.context
+            val intent = Intent(context, BigPictureActivity::class.java)
+            intent.putExtra(INTENT_DATA, v.getTag(R.layout.item) as FuliData)
+            val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity, v, TRANSITION_PIC)
+            ActivityCompat.startActivity(this@MainActivity, intent, optionsCompat.toBundle())
+        }
+
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val fuliData = data[position]
             val videoInfo = videoMap.get(fuliData.publishedAt)
-            holder.tv.text = "${fuliData.desc} ${if (videoInfo?.desc == null) "" else videoInfo?.desc}"
+            holder.tv.text = "${fuliData.desc} ${if (videoInfo?.desc == null) "" else videoInfo.desc}"
 
             if (screenWidth == 0) {
                 screenWidth = Util.getScreenSize(holder.itemView.context).x
             }
 //            imageLoader.displayImage("${fuliData.url}?imageView2/0/h/${screenWidth/2}", holder.iv)
             Glide.with(holder.iv).load("${fuliData.url}?imageView2/0/h/${screenWidth/2}").into(holder.iv)
+            holder.iv.setTag(R.layout.item, fuliData)
+
+            holder.iv.setOnClickListener(onClickListener)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -121,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             return vh;
         }
 
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val tv : TextView
             val iv : ImageView
             init {
