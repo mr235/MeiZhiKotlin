@@ -1,7 +1,6 @@
 package com.mr235.meizhi_kotlin
 
 import android.text.TextUtils
-import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
@@ -30,37 +29,40 @@ class BaseRequest<T>(url: String, val listener: RequestListener<T>?) : StringReq
             } else {
                 listener.fail("没有数据")
             }
+            listener.onFinish()
         }
     }
 
     private fun getType(): Type {
-        var type: Type = Object::class.java
-        val genericInterfaces = listener!!::class.java.genericInterfaces
-        if (genericInterfaces != null && genericInterfaces.size > 0) {
-            if (genericInterfaces[0] is ParameterizedType) {
-                type = (genericInterfaces[0] as ParameterizedType).actualTypeArguments[0]
-            }
+        var type: Type = String::class.java
+        val genericType = listener!!::class.java.genericSuperclass
+        if (genericType is ParameterizedType) {
+            type = genericType.actualTypeArguments[0]
         }
         return type
     }
 
     override fun deliverError(error: VolleyError?) {
         if (listener != null) {
-            listener?.fail(error?.message)
+            listener.fail(error?.message)
+            listener.onFinish()
         }
     }
 }
 
-interface RequestListener <T> {
-    fun success(data : T)
-    fun fail(message: String?)
+abstract class RequestListener <T> {
+    abstract fun success(data : T)
+    abstract fun fail(message: String?)
+    open fun onFinish() {
+
+    }
 }
 
 private fun encodeUrl(url: String?): String {
     if (!TextUtils.isEmpty(url)) {
         val url = URL(url)
         val uri = URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef())
-        return uri.toString()
+        return uri.toASCIIString()
     }
     return ""
 }

@@ -20,9 +20,9 @@ class FuliData {
     var _id : String = ""
         get() = if (_id == null) "" else _id
 
-    var createdAt : String = ""
+    var createdAt : Date? = null
     var desc : String = ""
-    var publishedAt : String = ""
+    var publishedAt : Date? = null
     var source : String = ""
     var type : String = ""
     var url : String = ""
