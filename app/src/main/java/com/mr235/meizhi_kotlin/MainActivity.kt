@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val isBottom = layoutManager.findLastCompletelyVisibleItemPositions(IntArray(2))[1] >= adapter.itemCount - 4
+                val isBottom = layoutManager.findLastCompletelyVisibleItemPositions(IntArray(2))[1] >= adapter.itemCount - 6
                 if (!swipeRefreshLayout.isRefreshing && isBottom) {
                     swipeRefreshLayout.isRefreshing = true
                     getData(page + 1)
