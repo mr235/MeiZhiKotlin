@@ -2,7 +2,7 @@ package com.mr235.meizhi_kotlin
 
 import android.app.Application
 import android.graphics.Bitmap
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache
+import android.webkit.CookieManager
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache
 import com.nostra13.universalimageloader.core.DisplayImageOptions
@@ -17,6 +17,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        CookieManager.getInstance().setAcceptCookie(true)
 
         val displayImageOptions = DisplayImageOptions.Builder()
                 .showImageForEmptyUri(android.R.color.transparent)

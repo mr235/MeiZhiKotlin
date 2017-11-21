@@ -106,11 +106,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         public val onClickListener = View.OnClickListener { v ->
-            val context = v.context
-            val intent = Intent(context, BigPictureActivity::class.java)
-            intent.putExtra(INTENT_DATA, v.getTag(R.layout.item) as FuliData)
-            val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity, v, TRANSITION_PIC)
-            ActivityCompat.startActivity(this@MainActivity, intent, optionsCompat.toBundle())
+            when(v.id) {
+                R.id.iv -> {
+                    val context = v.context
+                    val intent = Intent(context, BigPictureActivity::class.java)
+                    intent.putExtra(INTENT_DATA, v.getTag(R.layout.item_main) as FuliData)
+                    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity, v, TRANSITION_PIC)
+                    ActivityCompat.startActivity(this@MainActivity, intent, optionsCompat.toBundle())
+                }
+                R.id.tv -> {
+                    val context = v.context
+                    val intent = Intent(context, GankActivity::class.java)
+                    intent.putExtra(INTENT_DATA, v.getTag(R.layout.item_main) as FuliData)
+                    context.startActivity(intent)
+                }
+
+            }
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -123,14 +134,17 @@ class MainActivity : AppCompatActivity() {
             }
 //            imageLoader.displayImage("${fuliData.url}?imageView2/0/h/${screenWidth/2}", holder.iv)
             Glide.with(holder.iv).load("${fuliData.url}?imageView2/0/h/${screenWidth/2}").into(holder.iv)
-            holder.iv.setTag(R.layout.item, fuliData)
 
+            holder.iv.setTag(R.layout.item_main, fuliData)
             holder.iv.setOnClickListener(onClickListener)
+
+            holder.tv.setTag(R.layout.item_main, fuliData)
+            holder.tv.setOnClickListener(onClickListener)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-            val v = LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false)
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false)
             var vh = ViewHolder(v);
             return vh;
         }
